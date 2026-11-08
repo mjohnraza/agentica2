@@ -1,0 +1,47 @@
+{
+  "Health Advisory KB Lookup (Local)": {
+    "count": 24,
+    "mean_ms": 0.03,
+    "median_ms": 0.03,
+    "median_sec": 0.0,
+    "min_ms": 0.03,
+    "max_ms": 0.06,
+    "p95_ms": 0.04,
+    "std_ms": 0.01
+  },
+  "Heat Index Computation (Local)": {
+    "count": 24,
+    "mean_ms": 0.0,
+    "median_ms": 0.0,
+    "median_sec": 0.0,
+    "min_ms": 0.0,
+    "max_ms": 0.01,
+    "p95_ms": 0.0,
+    "std_ms": 0.0
+  },
+  "Open-Meteo Air Quality API": {
+    "count": 24,
+    "mean_ms": 146.33,
+    "median_ms": 130.14,
+    "median_sec": 0.1301,
+    "min_ms": 129.45,
+    "max_ms": 518.29,
+    "p95_ms": 131.57,
+    "std_ms": 77.56
+  },
+  "Open-Meteo Weather API": {
+    "count": 24,
+    "mean_ms": 153.06,
+    "median_ms": 133.84,
+    "median_sec": 0.1338,
+    "min_ms": 130.92,
+    "max_ms": 599.6,
+    "p95_ms": 135.54,
+    "std_ms": 93.12
+  },
+  "_COMBINED_MEDIAN_": {
+    "count": 96,
+    "median_ms": 64.76,
+    "median_sec": 0.0648
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "architecture": {
+    "model_name": "meta-llama/meta-Llama-3.1-8B-Instruct",
+    "num_layers": 32,
+    "num_heads": 32,
+    "num_kv_heads": 8,
+    "hidden_size": 4096,
+    "head_dim": 128,
+    "head_dim_source": "explicit in config.json",
+    "total_params": 8030000000.0,
+    "attention_type": "Grouped-Query Attention (GQA)",
+    "gqa_ratio": "4:1 query-to-KV head sharing"
+  },
+  "weight_memory": {
+    "fp16_gb": 14.96,
+    "int8_gb": 7.48,
+    "int4_gb": 3.93
+  },
+  "kv_cache_memory": {
+    "sequence_length": 6600,
+    "bytes_per_value": 2,
+    "kv_bytes": 865075200,
+    "kv_mib": 825.0,
+    "kv_gb": 0.8057
+  },
+  "gpu_concurrency": [
+    {
+      "gpu_name": "NVIDIA RTX 4090 / A10G",
+      "total_vram_gb": 24.0,
+      "overhead_gb": 2.4,
+      "usable_vram_gb": 21.6,
+      "weight_int4_gb": 3.93,
+      "remaining_kv_vram_gb": 17.67,
+      "max_concurrent_sequences": 21
+    },
+    {
+      "gpu_name": "NVIDIA A100 (SXM4)",
+      "total_vram_gb": 80.0,
+      "overhead_gb": 8.0,
+      "usable_vram_gb": 72.0,
+      "weight_int4_gb": 3.93,
+      "remaining_kv_vram_gb": 68.07,
+      "max_concurrent_sequences": 84
+    }
+  ],
+  "peak_analysis": {
+    "peak_qpm": 47.03,
+    "arrival_rate_per_sec": 0.7839,
+    "agent_latency_sec": 7.85,
+    "active_concurrent_sessions": 6.15,
+    "peak_active_sessions_ceiling": 7,
+    "max_concurrent_per_gpu": 21,
+    "gpus_required": 1,
+    "gpus_recommended_ha": 2
+  },
+  "break_even": {
+    "gpu_monthly_cost_usd": 248.2,
+    "cloud_api_cost_per_query": 0.004575,
+    "q_star_daily": 1085.0,
+    "comparison_table": [
+      {
+        "daily_q": 500,
+        "monthly_queries": 25000,
+        "peak_qpm": 7.29,
+        "active_sessions": 1,
+        "gpus_needed": 1,
+        "self_host_cost": 248.2,
+        "api_cost": 114.38,
+        "cheaper": "Cloud API",
+        "net_savings": 133.82
+      },
+      {
+        "daily_q": 1000,
+        "monthly_queries": 50000,
+        "peak_qpm": 14.58,
+        "active_sessions": 2,
+        "gpus_needed": 1,
+        "self_host_cost": 248.2,
+        "api_cost": 228.75,
+        "cheaper": "Cloud API",
+        "net_savings": 19.45
+      },
+      {
+        "daily_q": 1500,
+        "monthly_queries": 75000,
+        "peak_qpm": 21.88,
+        "active_sessions": 3,
+        "gpus_needed": 1,
+        "self_host_cost": 248.2,
+        "api_cost": 343.12,
+        "cheaper": "Self-Hosting",
+        "net_savings": 94.93
+      },
+      {
+        "daily_q": 2000,
+        "monthly_queries": 100000,
+        "peak_qpm": 29.17,
+        "active_sessions": 4,
+        "gpus_needed": 1,
+        "self_host_cost": 248.2,
+        "api_cost": 457.5,
+        "cheaper": "Self-Hosting",
+        "net_savings": 209.3
+      },
+      {
+        "daily_q": 3225,
+        "monthly_queries": 161250,
+        "peak_qpm": 47.03,
+        "active_sessions": 7,
+        "gpus_needed": 1,
+        "self_host_cost": 248.2,
+        "api_cost": 737.72,
+        "cheaper": "Self-Hosting",
+        "net_savings": 489.52
+      },
+      {
+        "daily_q": 5000,
+        "monthly_queries": 250000,
+        "peak_qpm": 72.92,
+        "active_sessions": 10,
+        "gpus_needed": 1,
+        "self_host_cost": 248.2,
+        "api_cost": 1143.75,
+        "cheaper": "Self-Hosting",
+        "net_savings": 895.55
+      },
+      {
+        "daily_q": 7500,
+        "monthly_queries": 375000,
+        "peak_qpm": 109.38,
+        "active_sessions": 15,
+        "gpus_needed": 1,
+        "self_host_cost": 248.2,
+        "api_cost": 1715.62,
+        "cheaper": "Self-Hosting",
+        "net_savings": 1467.42
+      },
+      {
+        "daily_q": 10000,
+        "monthly_queries": 500000,
+        "peak_qpm": 145.83,
+        "active_sessions": 20,
+        "gpus_needed": 1,
+        "self_host_cost": 248.2,
+        "api_cost": 2287.5,
+        "cheaper": "Self-Hosting",
+        "net_savings": 2039.3
+      },
+      {
+        "daily_q": 15000,
+        "monthly_queries": 750000,
+        "peak_qpm": 218.75,
+        "active_sessions": 29,
+        "gpus_needed": 2,
+        "self_host_cost": 496.4,
+        "api_cost": 3431.25,
+        "cheaper": "Self-Hosting",
+        "net_savings": 2934.85
+      }
+    ]
+  }
+}
