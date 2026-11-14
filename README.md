@@ -31,27 +31,18 @@
 │   └── .env.example                           # Template for Puter Auth Token
 │
 ├── agentic q2/                                # Question 2: Parameter-Efficient Fine-Tuning
-│   ├── Assignment_Beta_Question_no_2_23K_0069.ipynb # Submission Jupyter Notebook
-│   ├── make_q2_notebook.py                    # Notebook Generation Engine
-│   ├── colab_bridge_live.py                   # Google Colab MCP WebSocket Bridge
-│   └── run_colab_mcp.py                       # Automated Colab MCP Launcher
+│   ├── Assignment_Beta_Q2_UNSLOTH_T4_FP16_FIXED (3).ipynb # PEFT Fine-Tuning Notebook (Unsloth T4 FP16)
+│   └── report.pdf                             # Question 2 Evaluation & Comparison Report
 │
 ├── agentic q3/                                # Question 3: Knowledge Distillation Mechanics
-│   ├── Assignment_Beta_Question_no_3_23K_0069.md   # Rigorous Step-by-Step Derivation Report
-│   ├── Assignment_Beta_Question_no_3_23K_0069.ipynb # Interactive Jupyter Notebook
-│   ├── solve_q3.py                            # Closed-form Math & Numerical Gradient Checker
-│   ├── make_q3_artifacts.py                   # Artifact Generator
-│   └── q3_results.json                        # Exact JSON Export of Quantities & Gradients
+│   └── kd numerical.pdf                       # Step-by-Step Loss, Gradients & Updates Report
 │
 ├── agentic q4/                                # Question 4: Sentiment Evaluation & Justification
-│   ├── Assignment_Beta_Question_no_4_Report.md     # Academic Evaluation Report
-│   ├── Assignment_Beta_Question_no_4_23K_0069.ipynb # Submission Jupyter Notebook
-│   ├── solve_q4.py                            # Statistical & NLP Evaluation Engine
-│   ├── make_q4_artifacts.py                   # Notebook Generation Script
-│   └── q4_results.json                        # Complete Metrics Export (BLEU, ROUGE, PPL, CI)
+│   ├── Assignment_Beta_Question_no_4_23K_0069 (1).ipynb # Stage 1 & Stage 2 Evaluation Notebook
+│   └── solutionn.pdf                          # Confusion Matrices, NLP Metrics & Perplexity Report
 │
 ├── agentic q5/                                # Question 5: Research Paper Summary
-│   └── Assignment_Beta_Question_no_5_Report.md # 2-Page Structured Summary (Ersoy & Erşahin)
+│   └── Q5 23k0069.pdf                         # 2-Page Academic RAG Architecture Summary
 │
 ├── chat.py                                    # Root Shortcut to Run SaafHawa Agent
 ├── requirements.txt                           # Root Project Dependencies
