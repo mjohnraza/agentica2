@@ -11,7 +11,7 @@
 ```
 .
 ├── agentic q1/                                # Question 1: SaafHawa Agentic Assistant
-│   ├── Assignment_Beta_Question_no_1_Report.md # Complete Academic Submission Report
+│   ├── q1 report.pdf                          # Complete Academic Submission Report (PDF)
 │   ├── Assignment_Beta_Question_no_1_Calculations.xlsx # Multi-sheet Excel Model
 │   ├── cost_plot.png                          # Self-Hosting vs. Cloud API Break-Even Plot
 │   ├── model.py                               # Puter Live LLM Brain with Tool Schemas
@@ -55,6 +55,7 @@
 ## Question Overview & Key Findings
 
 ### Question 1: SaafHawa Agentic Assistant (`agentic q1/`)
+- **Report**: `q1 report.pdf`
 - **System**: Live multi-turn AI assistant providing real-time Karachi environmental intelligence in Roman Urdu.
 - **Tools**: Live Open-Meteo Air Quality API, Weather Forecast API, English $\to$ Roman Urdu translator, and localized medical advice vector knowledge base.
 - **Empirical Latency**: 96 live API requests logged (`median = 64.76 ms`, `mean = 76.84 ms`).
@@ -63,15 +64,15 @@
 - **Break-Even Analysis**: Self-hosting on RTX 4090 beats Cloud API (GPT-4o-mini) at $Q^* = 1,085\text{ queries/day}$ ($32,550\text{ queries/month}$).
 
 ### Question 2: Parameter-Efficient Fine-Tuning (`agentic q2/`)
-- **Notebook**: `Assignment_Beta_Question_no_2_23K_0069.ipynb`
+- **Notebook**: `Assignment_Beta_Q2_UNSLOTH_T4_FP16_FIXED (3).ipynb`
+- **Report**: `report.pdf`
 - **Theory**: $W_0 \in \mathbb{R}^{4096 \times 4096}$ with $r=16 \implies 131,072$ parameters ($0.78125\%$ trainable); mathematical proof of zero initial adaptation perturbation ($B = 0 \implies \Delta W = 0$).
 - **Benchmark**: Evaluated Baseline vs. LoRA vs. QLoRA vs. DoRA vs. AdaLoRA on `Qwen2.5-1.5B-Instruct` across 2,000 function-calling examples (1,800 train / 200 test).
 - **Rank Scaling**: Evaluated $r \in \{4, 8, 16, 32\}$ on DoRA, demonstrating diminishing returns beyond $r = 8$.
 - **Production Recommendation**: DoRA ($r=8$) selected for shipping. Detailed failure mode analysis and multi-agent adapter hot-swapping risks.
 
 ### Question 3: Knowledge Distillation Mechanics (`agentic q3/`)
-- **Notebook**: `Assignment_Beta_Question_no_3_23K_0069.ipynb`
-- **Report**: `Assignment_Beta_Question_no_3_23K_0069.md`
+- **Report**: `kd numerical.pdf`
 - **Setup**: Context: *"The patient was admitted to the ___"*, $K=4$ candidate vocabulary (`hospital`, `clinic`, `ward`, `school`), ground truth $y = [1, 0, 0, 0]^T$.
   - Teacher Logits: $z_t = [5.0, 3.0, 2.0, 0.0]^T$
   - Student Logits: $z_s = [3.0, 2.5, 1.0, 0.5]^T$
@@ -87,8 +88,8 @@
   - Post-Step Loss: $L' = \mathbf{0.349256}$ ($24.68\%$ relative loss reduction in a single step).
 
 ### Question 4: Sentiment Classification & Justification (`agentic q4/`)
-- **Notebook**: `Assignment_Beta_Question_no_4_23K_0069.ipynb`
-- **Report**: `Assignment_Beta_Question_no_4_Report.md`
+- **Notebook**: `Assignment_Beta_Question_no_4_23K_0069 (1).ipynb`
+- **Report**: `solutionn.pdf`
 - **Dataset**: 300 customer reviews (Positive: 120, Negative: 100, Neutral: 80).
 - **Stage 1 (Zero-Shot Baseline)**:
   - Accuracy: $76.67\%$ ($230/300$). 95% Wilson Score CI: $[71.56\%, 81.10\%]$, Wald CI: $[71.88\%, 81.45\%]$.
@@ -108,7 +109,7 @@
 - **Perplexity**: Candidate string perplexity $\text{PPL} = \mathbf{2.3249}$ (Average NLL $= 0.8437\text{ nats/token}$).
 
 ### Question 5: Cross-Domain RAG Paper Summary (`agentic q5/`)
-- **Report**: `Assignment_Beta_Question_no_5_Report.md`
+- **Report**: `Q5 23k0069.pdf`
 - **Paper**: *"A Comparative Evaluation of RAG Architectures for Cross-Domain LLM Applications: Design, Implementation, and Assessment"* by Pınar Ersoy & M. Erşahin (*IEEE Access, Vol. 13*).
 - **Core Insights**:
   - Systematically evaluated Sparse (BM25), Dense, Hybrid (RRF), and Fusion RAG across Finance and E-Commerce.
