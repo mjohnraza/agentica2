@@ -136,9 +136,94 @@ Directly extracted from Hugging Face `config.json`:
 * **INT4** ($0.5\text{ byte/param} + 5\%\text{ scale metadata}$): $\mathbf{3.93\text{ GiB}}$
 
 ### 5.3 KV-Cache Memory per Sequence (Longest Context = 6,600 Tokens)
-At the final call ($k=6$), context length is $6,000\text{ input tokens} + 600\text{ output tokens} = \mathbf{6,600\text{ tokens}}$:
-$$\text{KV bytes} = 2 \times \text{layers} \times \text{kv\_heads} \times \text{head\_dim} \times \text{sequence\_length} \times \text{bytes\_per\_value}$$
-$$\text{KV bytes} = 2 \times 32 \times 8 \times 128 \times 6,600 \times 2 = \mathbf{865,075,200\text{ bytes}} = \mathbf{825.0\text{ MiB}}\ (\mathbf{0.8057\text{ GiB}})$$
+
+#### 5.3.1 Architectural Formula & Parameter Definitions
+In autoregressive Transformer models with Grouped-Query Attention (GQA), the Key-Value (KV) cache stores previous token representations across generation steps to avoid redundant attention recalculations. Per the assignment specifications, the KV-cache memory is calculated as:
+
+$$\text{KV bytes} = 2 \times \text{layers} \times \text{kv-heads} \times \text{head-dim} \times \text{sequence-length} \times \text{bytes-per-value}$$
+
+In standard algebraic notation:
+$$\text{KV bytes} = 2 \times L \times H_{\text{KV}} \times D_{\text{head}} \times S \times b$$
+
+Where each term represents:
+1. **Factor of $2$**: Stores two distinct activation tensors per token: the **Key ($K$)** tensor and the **Value ($V$)** tensor.
+2. **Layers ($L = 32$)**: Number of Transformer decoder layers in Llama-3.1-8B-Instruct (`num_hidden_layers: 32`).
+3. **KV Heads ($H_{\text{KV}} = 8$)**: Number of Key-Value projection heads (`num_key_value_heads: 8`). Under Grouped-Query Attention (GQA), each KV head is shared across $32 / 8 = 4$ query heads, yielding an immediate $4\times$ KV memory reduction compared to standard Multi-Head Attention (MHA).
+4. **Head Dimension ($D_{\text{head}} = 128$)**: Hidden dimension per attention head, explicitly defined in `config.json` (`head_dim: 128`), matching $4096 / 32 = 128$.
+5. **Sequence Length ($S$)**: Total sequence context length in tokens. In the agentic loop, context lengthens at each step $k$:
+   - For call $k = 6$ (final response call), $\text{Input Tokens}_6 = 2,000 + 800 \times (6 - 1) = \mathbf{6,000\text{ tokens}}$.
+   - Call $k = 6$ generates $\text{Output Tokens}_6 = \mathbf{600\text{ tokens}}$.
+   - **Longest Context Length ($S_{\text{max}}$)**: $6,000\text{ input} + 600\text{ output} = \mathbf{6,600\text{ tokens}}$.
+6. **Bytes per Value ($b = 2$)**: Storage precision for the cache values ($2\text{ bytes}$ for standard FP16 / BF16).
+
+---
+
+#### 5.3.2 Step-by-Step Calculation (Longest Context $S = 6,600$ Tokens)
+
+To adhere strictly to the handout requirement (*"Show every step of your working. No marks on direct answer"*):
+
+1. **Memory per Token per Layer ($m_{\text{layer}}$):**
+   $$m_{\text{layer}} = 2 \times 8 \times 128 \times 2 = \mathbf{4,096\text{ bytes per token per layer}}$$
+
+2. **Memory per Token Across All 32 Transformer Layers ($m_{\text{total}}$):**
+   $$m_{\text{total}} = 4,096\text{ bytes} \times 32\text{ layers} = \mathbf{131,072\text{ bytes per token}} = \mathbf{128.0\text{ KiB per token}}$$
+
+3. **Total KV-Cache Memory for Longest Sequence ($S = 6,600$ Tokens):**
+   $$\text{Total KV bytes} = 131,072\text{ bytes per token} \times 6,600\text{ tokens} = \mathbf{865,075,200\text{ bytes}}$$
+
+4. **Rigorous Unit Conversions:**
+   - **Bytes ($B$):** $865,075,200\text{ B}$
+   - **Kibibytes ($\text{KiB}$, base 2):** $\frac{865,075,200}{1,024} = \mathbf{844,800.0\text{ KiB}}$
+   - **Mebibytes ($\text{MiB}$, base 2):** $\frac{844,800}{1,024} = \mathbf{825.0\text{ MiB}}$
+   - **Gibibytes ($\text{GiB}$, base 2):** $\frac{825.0}{1,024} = \mathbf{0.805664\text{ GiB}} \approx \mathbf{0.8057\text{ GiB}}$
+   - **Gigabytes ($\text{GB}$, base 10):** $\frac{865,075,200}{10^9} = \mathbf{0.865075\text{ GB}} \approx \mathbf{0.8651\text{ GB}}$
+
+---
+
+#### 5.3.3 Context Growth Across All Agent Turns ($k = 1$ to $k = 6$)
+
+Because context accumulates over the multi-turn agentic cycle, the KV-cache footprint dynamically expands from step 1 to step 6 as detailed below:
+
+| Call ($k$) | Agent Action | Input Tokens | Output Tokens | Total Context ($S_k$) | KV-Cache (Bytes) | KV-Cache (MiB) | KV-Cache (GiB) |
+|:---:|:---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **1** | Identify Risk & Parse Query | 2,000 | 350 | 2,350 | $308,019,200$ | 293.75 MiB | 0.2869 GiB |
+| **2** | Call OpenAQ API | 2,800 | 350 | 3,150 | $412,876,800$ | 393.75 MiB | 0.3845 GiB |
+| **3** | Call Open-Meteo Weather API | 3,600 | 350 | 3,950 | $517,734,400$ | 493.75 MiB | 0.4822 GiB |
+| **4** | Call Heat Index Tool | 4,400 | 350 | 4,750 | $622,592,000$ | 593.75 MiB | 0.5798 GiB |
+| **5** | Query Health KB | 5,200 | 350 | 5,550 | $727,449,600$ | 693.75 MiB | 0.6775 GiB |
+| **6** | Final Synthesis (Roman Urdu) | 6,000 | 600 | **6,600** | **865,075,200** | **825.00 MiB** | **0.8057 GiB** |
+
+*(Note: During prompt prefill of call $k=6$, the context is 6,000 tokens requiring $786,432,000\text{ bytes} = 750.0\text{ MiB}$ ($0.7324\text{ GiB}$). As the model generates the final 600 output tokens, it expands to the peak $825.0\text{ MiB}$ ($0.8057\text{ GiB}$)).*
+
+---
+
+#### 5.3.4 KV-Cache Footprint Across Alternative Precisions
+
+| Precision | Bytes / Value | KV Cache per Sequence ($S = 6,600$) | Savings vs FP16 | Impact on RTX 4090 (24 GB) Concurrency |
+|:---|:---:|:---:|:---:|:---:|
+| **FP16 / BF16 (Baseline)** | **2.0** | **825.0 MiB (0.8057 GiB)** | Baseline | **21 concurrent sequences** |
+| **FP8 / INT8 Quantized** | 1.0 | 412.5 MiB (0.4028 GiB) | **50.0% savings** | **43 concurrent sequences** ($+105\%$) |
+| **INT4 Quantized** | 0.5 | 206.25 MiB (0.2014 GiB) | **75.0% savings** | **87 concurrent sequences** ($+314\%$) |
+
+---
+
+#### 5.3.5 Hugging Face `config.json` Parameter Verification
+
+The parameters used above were directly verified from the official Hugging Face repository (`meta-llama/Llama-3.1-8B-Instruct/config.json`):
+
+```json
+{
+  "_name_or_path": "meta-llama/meta-Llama-3.1-8B-Instruct",
+  "architectures": ["LlamaForCausalLM"],
+  "num_hidden_layers": 32,
+  "num_attention_heads": 32,
+  "num_key_value_heads": 8,
+  "hidden_size": 4096,
+  "head_dim": 128,
+  "torch_dtype": "bfloat16"
+}
+```
+*Verification Confirmation:* With $H_{KV} = 8$ and $D_h = 128$, the model uses Grouped-Query Attention ($32 / 8 = 4$ query heads per KV head). If the model used legacy Multi-Head Attention ($H_{KV} = 32$), the KV cache would be $4\times$ larger ($3,300.0\text{ MiB} \approx 3.22\text{ GiB}$ per sequence), severely restricting GPU concurrency to only 5 concurrent users.
 
 ### 5.4 GPU Concurrency & Infrastructure Provisioning
 On an **NVIDIA RTX 4090 / A10G (24 GB VRAM)** with $10\%$ runtime overhead ($2.4\text{ GB}$) and 4-bit weights ($3.93\text{ GB}$):
