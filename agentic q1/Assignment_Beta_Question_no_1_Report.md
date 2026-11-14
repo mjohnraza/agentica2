@@ -19,7 +19,7 @@ In accordance with the assignment parameter derivation rules based on student ro
 | LLM Calls per Query ($N$) | $5 + (R \pmod 4)$ | **6** | calls / query (calls 1–5 tool calls, call 6 final) |
 | Tool Failure Probability ($p$) | $0.04 + 0.01 \times D$ | **0.04** | $4\%$ probability of tool call failure |
 | Heatwave Days per Month ($H$) | $4 + (R \pmod 4)$ | **5** | days / month with $5 \times Q$ surge traffic |
-| Monthly Inference Budget ($B$) | $\$1,200 + 10 \times R$ | **\$1,890.00** | USD / month maximum operational spending |
+| Monthly Inference Budget ($B$) | $1,200 + 10 \times R\text{ USD}$ | **\$1,890.00** | USD / month maximum operational spending |
 | Latency Target ($T$) | $10 - (R \pmod 3)$ | **10.0** | seconds maximum end-to-end user SLA |
 | Cacheable Prefix Length | Fixed in Handout | **1,500** | input tokens (system prompt + tool schemas) |
 
@@ -77,9 +77,9 @@ On heatwave days, daily traffic rises to $5 \times 3,225 = 16,125\text{ queries}
 
 *Data citations & access date: Official provider pricing documentation, Hugging Face model cards, and Berkeley Function Calling Leaderboard (accessed November 2026).*
 
-### 3.2 Monthly Cost With and Without Prompt Caching ($B = \$1,890$)
+### 3.2 Monthly Cost With and Without Prompt Caching (Budget $B = \text{USD } 1,890$)
 
-| Model | Cost Without Caching | 1,500 Token Cache Policy | Cost With Caching | Monthly Savings | Within Budget $B \le \$1,890$? |
+| Model | Cost Without Caching | 1,500 Token Cache Policy | Cost With Caching | Monthly Savings | Within Budget ($B \le 1,890\text{ USD}$)? |
 |---|:---:|:---:|:---:|:---:|:---:|
 | **GPT-4o-mini** | **\$832.05** | Eligible ($\ge 1024$ tokens) | **\$737.72** | **11.3%** | ✅ **YES** |
 | **GPT-4o (Omni)** | \$13,867.50 | Eligible ($\ge 1024$ tokens) | \$12,295.31 | 11.3% | ❌ NO |
@@ -237,15 +237,17 @@ On an **NVIDIA RTX 4090 / A10G (24 GB VRAM)** with $10\%$ runtime overhead ($2.4
 
 ## 6. Break-Even Analysis ($Q^*$)
 
-* **Cloud GPU Cost**: RunPod / Vast.ai on-demand RTX 4090 @ $\$0.34/\text{hr} \times 730\text{ hrs} = \mathbf{\$248.20/\text{month}}$ per GPU.
-* **Cheapest Compliant Cloud API**: GPT-4o-mini with prompt caching at $\mathbf{\$0.004575/\text{query}}$ ($\$737.72 / 161,250\text{ queries}$).
+* **Cloud GPU Cost**: RunPod / Vast.ai on-demand RTX 4090 at \$0.34 / hr:
+  $$\text{Monthly GPU Cost} = 0.34 \times 730 = \mathbf{248.20\text{ USD / month per GPU}}$$
+* **Cheapest Compliant Cloud API**: GPT-4o-mini with prompt caching (\$737.72 / 161,250 queries):
+  $$\text{Cloud API Cost per Query} = \frac{737.72}{161,250} = \mathbf{0.004575\text{ USD / query}}$$
 
-$$\text{Crossover Volume } Q^* = \frac{\$248.20}{50 \times \$0.004575} \approx \mathbf{1,085\text{ queries/day}}$$
+$$\text{Crossover Volume } Q^* = \frac{248.20\text{ USD}}{50 \times 0.004575\text{ USD}} \approx \mathbf{1,085\text{ queries / day}}$$
 
 ![Break-Even Cost Plot](cost_plot.png)
 
 ### Recommendation to the Technical Lead
-At Karachi's expected baseline volume of **$3,225\text{ queries/day}$**, self-hosting **Llama 3.1 8B Instruct** on a cloud RTX 4090 costs **\$248.20/month**, compared to **\$737.72/month** for GPT-4o-mini and **\$928.25/month** for Llama 3.3 70B via DeepInfra. Self-hosting achieves a **$66.4\%$ monthly cost reduction (\$489.52 savings/month)**, completely eliminates third-party rate limits during catastrophic heatwave spikes, and guarantees citizen health advisory data remains locally governed.
+At Karachi's expected baseline volume of **3,225 queries / day**, self-hosting **Llama 3.1 8B Instruct** on a cloud RTX 4090 costs **\$248.20 / month**, compared to **\$737.72 / month** for GPT-4o-mini and **\$928.25 / month** for Llama 3.3 70B via DeepInfra. Self-hosting achieves a **66.4% monthly cost reduction (\$489.52 savings / month)**, completely eliminates third-party rate limits during catastrophic heatwave spikes, and guarantees citizen health advisory data remains locally governed.
 
 ---
 
